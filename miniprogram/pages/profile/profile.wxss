@@ -1,0 +1,151 @@
+/* 我的 */
+
+/* 总览 */
+
+.hero {
+  text-align: center;
+}
+
+.hero-xp {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: var(--sp-2);
+  margin: var(--sp-3) 0;
+}
+
+.hero-xp-num {
+  font-size: 80rpx;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--c-primary);
+}
+
+.hero-xp-label {
+  font-size: var(--fs-sm);
+  color: var(--c-text-3);
+}
+
+/* 入口卡 */
+
+.entry-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--sp-3);
+}
+
+.entry-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.entry-title {
+  font-size: var(--fs-md);
+  font-weight: 500;
+  color: var(--c-text);
+}
+
+.entry-arrow {
+  font-size: 40rpx;
+  color: var(--c-text-3);
+  line-height: 1;
+}
+
+/* 分科 */
+
+.subj-list {
+  margin-top: var(--sp-2);
+}
+
+.subj-row {
+  padding: var(--sp-2) 0;
+  border-bottom: 1rpx solid var(--c-border);
+}
+
+.subj-row:last-child {
+  border-bottom: none;
+}
+
+.subj-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--sp-2);
+}
+
+.subj-name {
+  font-size: var(--fs-md);
+  color: var(--c-text);
+}
+
+.subj-name.is-dim {
+  color: var(--c-text-3);
+}
+
+.subj-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--sp-1);
+}
+
+/* 设置 */
+
+.set-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-3) 0;
+  border-bottom: 1rpx solid var(--c-border);
+}
+
+.set-row:last-child {
+  border-bottom: none;
+}
+
+.set-name {
+  font-size: var(--fs-md);
+  color: var(--c-text);
+}
+
+.set-name.set-danger {
+  color: var(--c-danger);
+}
+
+.set-value {
+  font-size: var(--fs-sm);
+  color: var(--c-text-3);
+}
+
+/* 待开放 */
+
+.dim-card {
+  margin-top: var(--sp-3);
+  opacity: 0.85;
+}
+
+.todo-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  padding: var(--sp-1) 0;
+}
+
+.todo-dot {
+  color: var(--c-text-3);
+  font-size: var(--fs-md);
+  line-height: 1.4;
+}
+
+.dim-note {
+  display: block;
+  margin-top: var(--sp-2);
+  padding-top: var(--sp-2);
+  border-top: 1rpx solid var(--c-border);
+}
+
+.act-btn {
+  width: 100%;
+  margin: var(--sp-4) 0 var(--sp-3);
+}

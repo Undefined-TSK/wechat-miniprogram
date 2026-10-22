@@ -1,0 +1,308 @@
+/* ==========================================================================
+   章节地图页样式
+   所有颜色取自 styles/variables.wxss，本文件不写死色值。
+   ========================================================================== */
+
+.root {
+  min-height: 100vh;
+  padding: var(--page-pad);
+  padding-bottom: var(--sp-6);
+  background-color: var(--c-bg);
+  box-sizing: border-box;
+}
+
+/* ------------------------------ 顶部概览 ------------------------------ */
+
+.hero {
+  padding: var(--sp-2) 0 var(--sp-4);
+}
+
+.hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+
+.hero-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero-title {
+  display: block;
+  font-size: var(--fs-xl);
+  font-weight: 500;
+  color: var(--c-text);
+}
+
+.hero-sub {
+  display: block;
+  margin-top: 6rpx;
+  font-size: var(--fs-sm);
+  color: var(--c-text-2);
+}
+
+.hero-xp {
+  flex: none;
+  text-align: right;
+}
+
+.hero-xp-num {
+  display: block;
+  font-size: var(--fs-xl);
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--c-primary);
+}
+
+.hero-xp-label {
+  display: block;
+  font-size: var(--fs-xs);
+  color: var(--c-text-3);
+}
+
+.hero-kps {
+  display: block;
+  margin-top: var(--sp-2);
+  font-size: var(--fs-xs);
+  line-height: 1.7;
+  color: var(--c-text-3);
+}
+
+.bar-wrap {
+  margin-top: var(--sp-4);
+}
+
+.bar {
+  height: 12rpx;
+  border-radius: 999rpx;
+  background-color: var(--c-bg-sunken);
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 999rpx;
+  background-color: var(--c-primary);
+  transition: width 0.3s ease;
+}
+
+.bar-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--sp-2);
+}
+
+/* ------------------------------ 科目条 ------------------------------ */
+
+.subject-bar {
+  white-space: nowrap;
+  margin-bottom: var(--sp-4);
+}
+
+.subject-chip {
+  display: inline-block;
+  margin-right: var(--sp-2);
+  padding: 10rpx var(--sp-3);
+  border-radius: 999rpx;
+  font-size: var(--fs-sm);
+  color: var(--c-text-2);
+  background-color: var(--c-bg-card);
+  border: 2rpx solid var(--c-border);
+}
+
+.subject-chip.is-active {
+  color: var(--c-primary);
+  border-color: var(--c-primary);
+  background-color: var(--c-primary-weak);
+  font-weight: 500;
+}
+
+/* ------------------------------ 关卡路径 ------------------------------ */
+
+.path {
+  display: flex;
+  flex-direction: column;
+}
+
+.node {
+  display: flex;
+  align-items: stretch;
+  gap: var(--sp-3);
+}
+
+/* 左侧导轨：圆点 + 竖线 */
+.node-rail {
+  flex: none;
+  width: 56rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.node-dot {
+  flex: none;
+  width: 52rpx;
+  height: 52rpx;
+  margin-top: var(--sp-1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-sm);
+  color: var(--c-text-3);
+  background-color: var(--c-bg-card);
+  border: 2rpx solid var(--c-border-strong);
+}
+
+.node-dot.is-done {
+  color: var(--c-text-inverse);
+  background-color: var(--c-success);
+  border-color: var(--c-success);
+}
+
+.node-dot.is-locked {
+  border-style: dashed;
+  color: var(--c-text-3);
+}
+
+.node-dot-check {
+  font-size: var(--fs-sm);
+}
+
+.node-dot-num {
+  font-size: var(--fs-sm);
+}
+
+.node-line {
+  flex: 1;
+  width: 2rpx;
+  min-height: var(--sp-4);
+  background-color: var(--c-border);
+}
+
+/* 最后一个节点不画连接线（否则底部会多出一截悬空竖线） */
+.node:last-child .node-line {
+  background-color: transparent;
+}
+
+/* 右侧卡片 */
+.node-card {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-lg);
+  background-color: var(--c-bg-card);
+  border: 2rpx solid var(--c-border);
+}
+
+.node.is-locked .node-card {
+  background-color: var(--c-bg-sunken);
+  opacity: 0.7;
+}
+
+/* 「从这里继续」用主色描边，把视线引过去 */
+.node.is-next .node-card {
+  border-color: var(--c-primary);
+  box-shadow: 0 0 0 4rpx var(--c-primary-weak);
+}
+
+.node-card-top {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.node-name {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-md);
+  font-weight: 500;
+  color: var(--c-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.node-meta {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-top: 6rpx;
+}
+
+.node-foot {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+  min-height: 34rpx;
+}
+
+/* 星级 */
+.stars {
+  display: flex;
+  gap: 4rpx;
+}
+
+.star {
+  font-size: var(--fs-sm);
+  color: var(--c-star-empty);
+}
+
+.star.is-on {
+  color: var(--c-star);
+}
+
+.next-tag {
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--c-primary);
+}
+
+.lock-hint {
+  font-size: var(--fs-xs);
+  color: var(--c-text-3);
+}
+
+/* ------------------------------ 空状态 ------------------------------ */
+
+.empty {
+  padding: var(--sp-6) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+}
+
+/* ------------------------------ 底部入口 ------------------------------ */
+
+.entries {
+  display: flex;
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
+}
+
+.entry {
+  flex: 1;
+  padding: var(--sp-3);
+  border-radius: var(--r-lg);
+  background-color: var(--c-bg-card);
+  border: 2rpx solid var(--c-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+}
+
+.entry-icon {
+  font-size: var(--fs-lg);
+  color: var(--c-text-2);
+}
+
+.entry-name {
+  font-size: var(--fs-sm);
+  color: var(--c-text-2);
+}

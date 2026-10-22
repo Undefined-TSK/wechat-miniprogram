@@ -1,0 +1,26 @@
+{
+  "name": "xx-chuangguan",
+  "version": "0.3.0",
+  "private": true,
+  "description": "XX闯关 —— 多学科游戏化学习小程序（微信原生 + TypeScript）",
+  "scripts": {
+    "test": "node tests/engine.test.mjs && node tests/wiring.test.mjs && node tests/pages.test.mjs && node tests/judge.test.mjs && node tests/judge-http.test.mjs",
+    "test:engine": "node tests/engine.test.mjs",
+    "test:wiring": "node tests/wiring.test.mjs",
+    "test:pages": "node tests/pages.test.mjs",
+    "test:judge": "node tests/judge.test.mjs",
+    "test:http": "node tests/judge-http.test.mjs",
+    "bank:check": "node scripts/check-bank.mjs",
+    "bank:stats": "node scripts/check-bank.mjs --stats",
+    "smoke:judge": "node scripts/smoke-judge.mjs",
+    "sync:contract": "cp miniprogram/services/judge-contract.ts judge-service/src/contract.ts",
+    "serve:judge": "node judge-service/src/server.js",
+    "test:all": "npm test",
+    "sandbox:build": "bash judge-service/images/build.sh",
+    "sandbox:verify": "bash judge-service/images/build.sh verify",
+    "seccomp:plan": "node judge-service/scripts/seccomp-calibrate.mjs --dry-run",
+    "seccomp:report": "node judge-service/scripts/seccomp-calibrate.mjs --report",
+    "adapters:check": "node judge-service/scripts/check-adapters.mjs"
+  },
+  "devDependencies": {}
+}

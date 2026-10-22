@@ -1,0 +1,10 @@
+{
+  "component": true,
+  "usingComponents": {
+    "single-choice": "./renderers/single-choice/index",
+    "multi-choice": "./renderers/multi-choice/index",
+    "fill-blank": "./renderers/fill-blank/index",
+    "program-output": "./renderers/program-output/index",
+    "code-editor": "./renderers/code-editor/index"
+  }
+}

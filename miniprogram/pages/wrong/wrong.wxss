@@ -1,0 +1,157 @@
+/* 错题本 */
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: var(--sp-1) 0 var(--sp-3);
+}
+
+/* 空状态 */
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-6) var(--sp-4);
+  text-align: center;
+}
+
+.empty-icon {
+  width: 120rpx;
+  height: 120rpx;
+  line-height: 120rpx;
+  border-radius: 50%;
+  background: var(--c-success-weak);
+  color: var(--c-success);
+  font-size: 64rpx;
+}
+
+.empty-title {
+  font-size: var(--fs-lg);
+  font-weight: 500;
+  color: var(--c-text);
+}
+
+.empty-btn {
+  margin-top: var(--sp-3);
+  width: 60%;
+}
+
+/* 分组 */
+
+.group {
+  margin-bottom: var(--sp-4);
+}
+
+.group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--sp-2);
+}
+
+.group-head-left {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+}
+
+.group-name {
+  font-size: var(--fs-md);
+  font-weight: 500;
+  color: var(--c-text);
+}
+
+.group-redo {
+  font-size: var(--fs-sm);
+  color: var(--c-primary);
+}
+
+/* 错题卡 */
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.q-card {  background: var(--c-bg-card);
+  border-radius: var(--r-md);
+  padding: var(--sp-3);
+  margin-bottom: var(--sp-2);
+}
+
+.q-top {
+  display: flex;
+}
+
+.q-stem {
+  flex: 1;
+  font-size: var(--fs-md);
+  line-height: 1.6;
+  color: var(--c-text);
+}
+
+.q-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+.q-time {
+  margin-left: auto;
+}
+
+.q-expand {
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-3);
+  border-top: 1rpx solid var(--c-border);
+}
+
+.q-full-stem {
+  display: block;
+  font-size: var(--fs-md);
+  line-height: 1.7;
+  color: var(--c-text);
+  white-space: pre-wrap;
+}
+
+.q-analysis {
+  margin-top: var(--sp-3);
+  padding: var(--sp-3);
+  border-radius: var(--r-sm);
+  background: var(--c-bg-sunken);
+}
+
+.q-analysis-label {
+  display: block;
+  font-size: var(--fs-xs);
+  color: var(--c-primary);
+  margin-bottom: var(--sp-1);
+}
+
+.q-analysis-text {
+  display: block;
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--c-text-2);
+  white-space: pre-wrap;
+}
+
+.q-streak {
+  margin-top: var(--sp-3);
+}
+
+/* 底部 */
+
+.foot {
+  margin-top: var(--sp-4);
+}
+
+.act-btn {
+  width: 100%;
+  margin-top: var(--sp-2);
+}

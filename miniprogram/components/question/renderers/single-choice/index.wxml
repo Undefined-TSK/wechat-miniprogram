@@ -1,0 +1,13 @@
+<view class="opts">
+  <view
+    wx:for="{{items}}"
+    wx:key="key"
+    class="opt {{item.cls}}"
+    data-key="{{item.key}}"
+    bindtap="onTap"
+  >
+    <text class="opt-key">{{item.key}}</text>
+    <text class="opt-text">{{item.text}}</text>
+    <text wx:if="{{item.mark}}" class="opt-mark">{{item.mark}}</text>
+  </view>
+</view>

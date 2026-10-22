@@ -1,0 +1,162 @@
+/* 引擎容器样式。颜色全部走主题变量，不写死色值 */
+
+.q {
+  padding-bottom: 40rpx;
+}
+
+.q-head {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: var(--sp-3);
+}
+
+.q-stem {
+  margin-bottom: var(--sp-4);
+}
+
+.q-stem-line {
+  display: block;
+  font-size: var(--fs-lg);
+  font-weight: 500;
+  line-height: 1.65;
+  color: var(--c-text);
+}
+
+.q-code {
+  margin-bottom: var(--sp-4);
+}
+
+.q-body {
+  margin-bottom: var(--sp-4);
+}
+
+.q-unknown {
+  padding: var(--sp-3);
+  border-radius: var(--r-md);
+  background-color: var(--c-danger-weak);
+  color: var(--c-danger);
+  font-size: var(--fs-sm);
+}
+
+/* ---------------------------- 判分反馈 ---------------------------- */
+
+.q-feedback {
+  border-radius: var(--r-lg);
+  padding: var(--sp-3);
+  margin-bottom: var(--sp-3);
+  border: 1rpx solid transparent;
+}
+
+.q-feedback.is-ok {
+  background-color: var(--c-success-weak);
+  border-color: rgba(34, 197, 94, 0.28);
+  animation: pop 200ms ease-out;
+}
+
+.q-feedback.is-partial {
+  background-color: var(--c-primary-weak);
+  border-color: rgba(61, 126, 255, 0.28);
+}
+
+.q-feedback.is-bad {
+  background-color: var(--c-danger-weak);
+  border-color: rgba(239, 68, 68, 0.28);
+  animation: shake 150ms ease-in-out;
+}
+
+.q-feedback-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-1);
+}
+
+.q-feedback-mark {
+  width: 40rpx;
+  height: 40rpx;
+  line-height: 40rpx;
+  text-align: center;
+  border-radius: 50%;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: #ffffff;
+  background-color: var(--c-text-3);
+}
+
+.is-ok .q-feedback-mark {
+  background-color: var(--c-success);
+}
+
+.is-partial .q-feedback-mark {
+  background-color: var(--c-primary);
+}
+
+.is-bad .q-feedback-mark {
+  background-color: var(--c-danger);
+}
+
+.q-feedback-title {
+  font-size: var(--fs-md);
+  font-weight: 500;
+  color: var(--c-text);
+}
+
+.q-feedback-score {
+  margin-left: auto;
+  font-size: var(--fs-xs);
+  color: var(--c-primary);
+}
+
+.q-feedback-detail {
+  display: block;
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--c-text-2);
+}
+
+.q-reveal {
+  margin-top: var(--sp-3);
+}
+
+.q-reveal-code {
+  margin-top: var(--sp-1);
+}
+
+.q-analysis {
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-3);
+  border-top: 1rpx dashed var(--c-border-strong);
+}
+
+.q-analysis-title {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--c-text);
+  margin-bottom: var(--sp-1);
+}
+
+.q-analysis-line {
+  display: block;
+  font-size: var(--fs-sm);
+  line-height: 1.8;
+  color: var(--c-text-2);
+}
+
+.q-remote-note {
+  display: block;
+  margin-top: var(--sp-2);
+  font-size: var(--fs-xs);
+  color: var(--c-text-3);
+}
+
+/* ---------------------------- 操作区 ---------------------------- */
+
+.q-actions {
+  margin-top: var(--sp-4);
+}
+
+.q-actions .btn {
+  width: 100%;
+}

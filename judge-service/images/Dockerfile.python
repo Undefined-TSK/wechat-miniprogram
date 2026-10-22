@@ -1,0 +1,91 @@
+# 判题沙箱镜像 · Python
+#
+# 用途：编译检查并运行用户提交的 Python 代码。
+# 构建：docker build -f images/Dockerfile.python -t judge-python:3.12-slim images/
+#
+# ⚠️ Python 的攻击面比 C 大得多，必须特别处理：
+#   1. **标准库里有网络模块**（socket / http / urllib / ftplib…）。
+#      --network none 能挡住出网，但挡不住「在本机起监听」这类行为，
+#      而且用户代码可以 import socket 去做 DNS 查询之类的事。
+#      我们的做法是：镜像里**删掉**这些模块，让它 import 时就失败。
+#   2. **pip 绝不能存在**。有 pip 就能装任意包，等于把容器变成通用计算节点。
+#   3. **-I 隔离模式必须开**（policy.ts 的 run 命令里已带 -I）：
+#      忽略 PYTHONPATH、不加载用户 site-packages、不读当前目录的 .pth。
+#      否则用户可以往 /box 里放一个 sitecustomize.py 影响解释器启动。
+
+FROM python:3.12-slim-bookworm
+
+LABEL org.opencontainers.image.title="judge-python" \
+      org.opencontainers.image.description="判题沙箱：Python 运行（最小化、非 root、无网络模块、无 pip）" \
+      judge.image.role="sandbox" \
+      judge.image.language="python"
+
+# 固定版本：python:3.12-slim-bookworm 的摘要会变，但主版本锁定在 3.12。
+# 若要完全可复现，构建后用 `docker inspect --format='{{.RepoDigests}}'` 取摘要，
+# 换成 python@sha256:... 的形式。当前先锁主版本。
+
+RUN set -eux; \
+    # ---------------------------------------------------------------
+    # 删掉网络相关标准库。
+    #
+    # 为什么删而不仅靠 --network none：
+    #   禁网是容器级的，而删模块是镜像级的。两层叠加的意义在于
+    #   「即使禁网配置因为某次改动失效，用户代码也 import 不到网络能力」。
+    #   判题沙箱的每一层都应该是独立的，不能互相依赖对方的正确性。
+    # ---------------------------------------------------------------
+    PY_LIB="$(python3 -c 'import sysconfig; print(sysconfig.get_path("stdlib"))')"; \
+    rm -rf \
+        "$PY_LIB/socket.py" \
+        "$PY_LIB/socketserver.py" \
+        "$PY_LIB/ssl.py" \
+        "$PY_LIB/http" \
+        "$PY_LIB/urllib" \
+        "$PY_LIB/ftplib.py" \
+        "$PY_LIB/telnetlib.py" \
+        "$PY_LIB/smtplib.py" \
+        "$PY_LIB/poplib.py" \
+        "$PY_LIB/imaplib.py" \
+        "$PY_LIB/nntplib.py" \
+        "$PY_LIB/xmlrpc" \
+        "$PY_LIB/webbrowser.py" \
+        "$PY_LIB/__pycache__/socket.*" 2>/dev/null || true; \
+    # ---------------------------------------------------------------
+    # 删掉 pip / setuptools / wheel。
+    # 有 pip 就能 pip install requests，网络模块白删了。
+    # ---------------------------------------------------------------
+    rm -rf \
+        "$PY_LIB/site-packages/pip" \
+        "$PY_LIB/site-packages/pip-"* \
+        "$PY_LIB/site-packages/setuptools" \
+        "$PY_LIB/site-packages/setuptools-"* \
+        "$PY_LIB/site-packages/wheel" \
+        "$PY_LIB/site-packages/wheel-"* \
+        /usr/local/bin/pip \
+        /usr/local/bin/pip3 \
+        /usr/local/bin/pip3.12 2>/dev/null || true; \
+    # 清掉包管理元数据
+    rm -rf /root/.cache /tmp/* /var/lib/apt/lists/* /etc/apt 2>/dev/null || true
+
+# 非 root，UID 1000（与 policy.ts 的 --user 1000:1000 一致；自检有断言盯着）
+RUN set -eux; \
+    groupadd -g 1000 sandbox; \
+    useradd -u 1000 -g sandbox -M -s /usr/sbin/nologin sandbox
+
+RUN set -eux; \
+    mkdir -p /box /box-artifact /tmp; \
+    chown -R sandbox:sandbox /box /box-artifact /tmp; \
+    chmod 1777 /tmp
+
+# 解释器选项：
+#   PYTHONDONTWRITEBYTECODE=1  不写 .pyc（/box 是只读挂载，写了也会失败并产生噪声）
+#   PYTHONUNBUFFERED=1         输出立刻刷新，否则超时被杀时拿不到任何输出
+#   PYTHONHASHSEED=0           哈希随机化关掉 —— 判题结果必须可复现！
+#                              不关的话，遍历 set/dict 的顺序每次不同，
+#                              同一份代码可能今天 AC 明天 WA
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONHASHSEED=0 \
+    PYTHONIOENCODING=utf-8
+
+USER 1000:1000
+WORKDIR /box

@@ -1,0 +1,15 @@
+{
+  "name": "xx-chuangguan-judge-service",
+  "version": "0.1.0",
+  "private": true,
+  "description": "XX闯关 · 判题服务（Docker 沙箱 + 12 项安全加固）",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node ../tests/judge.test.mjs"
+  },
+  "engines": {
+    "node": ">=22.6"
+  },
+  "dependencies": {}
+}

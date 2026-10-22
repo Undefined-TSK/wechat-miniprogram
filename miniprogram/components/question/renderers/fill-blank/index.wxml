@@ -1,0 +1,19 @@
+<view class="blanks">
+  <view wx:for="{{rows}}" wx:key="key" class="blank">
+    <text wx:if="{{item.label}}" class="blank-label">{{item.label}}</text>
+    <input
+      class="blank-input"
+      value="{{item.val}}"
+      disabled="{{locked}}"
+      placeholder="{{item.hint || '填写答案'}}"
+      placeholder-class="blank-ph"
+      data-index="{{index}}"
+      bindinput="onInput"
+      confirm-type="done"
+    />
+  </view>
+</view>
+
+<view wx:if="{{placeholder}}" class="blank-hint">
+  <text class="t-hint">{{placeholder}}</text>
+</view>

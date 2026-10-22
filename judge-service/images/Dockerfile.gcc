@@ -1,0 +1,87 @@
+# 判题沙箱镜像 · C / C++
+#
+# 用途：编译并运行用户提交的 C / C++ 代码。
+# 构建：docker build -f images/Dockerfile.gcc -t judge-gcc:13-slim images/
+#
+# ⚠️ 为什么必须自建，不能用公共镜像：
+#   这是全系统**唯一主动执行陌生人代码**的地方。公共镜像（如 gcc:13、ubuntu:24.04）
+#   自带 apt、curl、bash 完整交互能力，其中 curl/wget 会直接威胁「禁网」这条加固——
+#   容器虽然 --network none，但镜像里如果有网络工具，一旦哪天禁网配置被改错
+#   或换用别的执行方式，出网能力会立刻复活，而且没人会注意到。
+#   自建的成本约半天，换来的是「这个运行环境里有什么，完全由我们决定且可审计」。
+
+# ---------------------------------------------------------------
+# 构建阶段：装完整的 gcc/g++ 工具链
+# ---------------------------------------------------------------
+FROM debian:bookworm-20240926-slim AS toolchain
+
+# 固定版本号，不用 latest —— 否则某天上游更新会让判题行为静默变化。
+# （判题结果必须可复现：同一份代码昨天 AC 今天不该变成 RE）
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        gcc \
+        g++ \
+        libc6-dev \
+        # 静态链接需要：-static 要求 libc.a 存在，否则编译直接失败
+        libstdc++-12-dev; \
+    rm -rf /var/lib/apt/lists/*
+
+# ---------------------------------------------------------------
+# 运行阶段：只保留运行时必需的东西
+# ---------------------------------------------------------------
+FROM debian:bookworm-20240926-slim
+
+LABEL org.opencontainers.image.title="judge-gcc" \
+      org.opencontainers.image.description="判题沙箱：C/C++ 编译与运行（最小化、非 root、无外联工具）" \
+      judge.image.role="sandbox" \
+      judge.image.language="c,cpp"
+
+# 只装运行静态二进制所需的动态库。
+# 注意：我们编译时用 -static，理论上不需要 libc6，
+# 但 gcc 自身（在编译阶段）是动态链接的，所以编译容器必须保留 libc6。
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        libc6 \
+        libstdc++6; \
+    rm -rf /var/lib/apt/lists/*; \
+    # 清掉包管理器本身 —— 即使有人拿到 shell 也没法装东西
+    apt-get purge -y --auto-remove apt dpkg 2>/dev/null || true; \
+    rm -rf /var/lib/dpkg /var/lib/apt /etc/apt
+
+# 从构建阶段拷工具链（比在运行阶段装更干净：不含 apt 的中间产物）
+COPY --from=toolchain /usr/bin/ /usr/bin/
+COPY --from=toolchain /usr/lib/gcc/ /usr/lib/gcc/
+COPY --from=toolchain /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/
+COPY --from=toolchain /usr/include/ /usr/include/
+COPY --from=toolchain /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
+
+# ---------------------------------------------------------------
+# 非 root 用户，UID 固定 1000
+#
+# UID 必须是 1000：policy.ts 里硬编码了 --user 1000:1000。
+# 改了这里就必须同步改 policy.ts，否则容器启动即失败
+# （docker 会让未知 UID 以 nobody 运行，或直接报错）。
+# 自检 tests/judge.test.mjs 里有一条断言盯着这个数字。
+# ---------------------------------------------------------------
+RUN set -eux; \
+    groupadd -g 1000 sandbox; \
+    useradd -u 1000 -g sandbox -M -s /usr/sbin/nologin sandbox
+
+# 工作目录与产物挂载点。两个都建好并 chown，
+# 避免容器启动时因挂载点不存在而被 docker 自动创建成 root 属主。
+RUN set -eux; \
+    mkdir -p /box /box-artifact /tmp; \
+    chown -R sandbox:sandbox /box /box-artifact /tmp; \
+    chmod 1777 /tmp
+
+USER 1000:1000
+
+# 显式声明，让运维一眼看出这个镜像该被怎么用
+WORKDIR /box
+
+# 不进容器做健康检查：这个镜像是一次性的，跑完即删。
+# 加 HEALTHCHECK 只会给每次判题多一次进程开销。

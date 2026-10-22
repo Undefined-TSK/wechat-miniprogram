@@ -1,0 +1,111 @@
+<view class="root {{theme}}">
+  <view wx:if="{{loading}}" class="state">
+    <text class="t-sub">正在取题…</text>
+  </view>
+
+  <view wx:elif="{{error}}" class="state">
+    <text class="t-body">{{error}}</text>
+    <button class="btn btn-ghost back-btn" bindtap="onBack">返回</button>
+  </view>
+
+  <block wx:elif="{{!finished}}">
+    <view class="page-pad">
+      <view class="head">
+        <view class="row-between">
+          <text class="t-sub">{{levelName}}</text>
+          <text class="t-sub">{{view.humanIndex}}/{{view.total}} · {{clock}}</text>
+        </view>
+        <view class="bar">
+          <view class="bar-fill" style="width: {{view.progressPercent}}%"></view>
+        </view>
+        <view class="row gap-2 combo-row">
+          <text class="pill {{view.combo > 0 ? 'pill-success' : ''}}">连对 {{view.combo}}</text>
+          <text wx:if="{{view.comboMultiplier > 1}}" class="pill pill-primary">经验 ×{{view.comboMultiplier}}</text>
+          <text class="t-hint">已答对 {{view.correctCount}} 题</text>
+        </view>
+      </view>
+
+      <question-view
+        question="{{question}}"
+        feedback="{{feedback}}"
+        locked="{{locked}}"
+        is-last="{{view.isLast}}"
+        bind:submit="onQuestionSubmit"
+        bind:next="onQuestionNext"
+      />
+    </view>
+  </block>
+
+  <block wx:else>
+    <view class="page-pad">
+      <!--
+        进度落盘失败提示。必须显眼：静默丢进度是最让用户恼火的问题，
+        用户做完一关发现首页星级没变会以为程序坏了。
+      -->
+      <view wx:if="{{saveFailed}}" class="banner banner-warn">
+        <text class="banner-title">进度没保存上</text>
+        <text class="t-hint">可能是手机存储空间不足。本次成绩仍然有效，但关掉小程序后可能丢失。</text>
+      </view>
+
+      <view class="card result-card">
+        <text class="t-sub">本关成绩</text>
+        <view class="stars">
+          <text wx:for="{{starList}}" wx:key="index" class="star {{item ? 'is-on' : ''}}">★</text>
+        </view>
+        <text class="result-title">{{starText}}</text>
+        <text wx:if="{{newlyCleared}}" class="t-hint cleared-note">首次通关，下一关已解锁</text>
+
+        <view class="grid">
+          <view class="grid-item">
+            <text class="grid-v">{{summary.correctCount}}/{{summary.total}}</text>
+            <text class="t-hint">完全正确</text>
+          </view>
+          <view class="grid-item">
+            <text class="grid-v">{{rateText}}</text>
+            <text class="t-hint">得分率</text>
+          </view>
+          <view class="grid-item">
+            <text class="grid-v">{{summary.maxCombo}}</text>
+            <text class="t-hint">最高连对</text>
+          </view>
+          <view class="grid-item">
+            <text class="grid-v">+{{summary.xp}}</text>
+            <text class="t-hint">经验</text>
+          </view>
+        </view>
+
+        <view class="hr"></view>
+        <view class="row-between">
+          <text class="t-hint">用时 {{timeText}}</text>
+          <text class="t-hint">平均 {{summary.avgCostMs}} 毫秒/题</text>
+        </view>
+      </view>
+
+      <view wx:if="{{wrongItems.length}}" class="card wrong-card">
+        <text class="t-head">需要再看的题（{{wrongItems.length}}）</text>
+        <view class="wrong-list">
+          <view wx:for="{{wrongItems}}" wx:key="id" class="wrong-item">
+            <view class="wrong-line">
+              <text class="pill">{{item.type}}</text>
+              <text class="t-hint">得分 {{item.percent}}%</text>
+              <text wx:if="{{item.hasAnalysis}}"
+                    class="wrong-toggle"
+                    data-index="{{index}}"
+                    bindtap="onToggleAnalysis">{{item.expanded ? '收起解析' : '看解析'}}</text>
+            </view>
+            <text wx:if="{{item.expanded && item.hasAnalysis}}" class="wrong-analysis">{{item.analysis}}</text>
+            <text wx:if="{{item.expanded && !item.hasAnalysis}}" class="t-hint">这道题没有下发解析（防作弊关卡不下发）。</text>
+          </view>
+        </view>
+        <text class="t-hint wrong-note">这些题已记入错题本，可在首页「错题本」里重做。</text>
+      </view>
+
+      <view wx:if="{{summary.partialCount > 0}}" class="card">
+        <text class="t-sub">有 {{summary.partialCount}} 道题部分正确（漏选），已按半分规则计分。</text>
+      </view>
+
+      <button class="btn btn-primary act-btn" bindtap="onRestart">再练一次</button>
+      <button class="btn btn-ghost act-btn" bindtap="onBack">返回关卡地图</button>
+    </view>
+  </block>
+</view>

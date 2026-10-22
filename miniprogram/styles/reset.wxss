@@ -1,0 +1,263 @@
+/* 基础重置 + 通用原子类 */
+
+page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  font-size: var(--fs-md);
+  line-height: 1.6;
+  color: var(--c-text);
+  background-color: var(--c-bg);
+}
+
+view,
+text,
+image,
+button,
+input,
+textarea {
+  box-sizing: border-box;
+}
+
+/* 页面根容器：手动主题类挂在这里 */
+.root {
+  min-height: 100vh;
+  background-color: var(--c-bg);
+  color: var(--c-text);
+}
+
+.page-pad {
+  padding: var(--sp-3) var(--page-pad) var(--sp-6);
+}
+
+/* 卡片 */
+.card {
+  background-color: var(--c-bg-card);
+  border-radius: var(--r-lg);
+  padding: var(--sp-4);
+  border: 1rpx solid var(--c-border);
+}
+
+/* 文字阶梯 */
+.t-title {
+  font-size: var(--fs-xl);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.t-head {
+  font-size: var(--fs-lg);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.t-body {
+  font-size: var(--fs-md);
+  line-height: 1.7;
+}
+
+.t-sub {
+  font-size: var(--fs-sm);
+  color: var(--c-text-2);
+  line-height: 1.6;
+}
+
+.t-hint {
+  font-size: var(--fs-xs);
+  color: var(--c-text-3);
+  line-height: 1.5;
+}
+
+/* 布局 */
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.grow {
+  flex: 1;
+}
+
+.gap-1 {
+  gap: var(--sp-1);
+}
+.gap-2 {
+  gap: var(--sp-2);
+}
+.gap-3 {
+  gap: var(--sp-3);
+}
+.gap-4 {
+  gap: var(--sp-4);
+}
+
+/* 分割线 */
+.hr {
+  height: 1rpx;
+  background-color: var(--c-border);
+  margin: var(--sp-3) 0;
+}
+
+/* 进度条（多个页面共用，放全局避免各页各写一份）
+   ⚠️ 填充条同时提供 .bar-in（level 页用）与 .bar-fill（首页/我的用）两个类名，
+      历史原因保留双名；新增页面统一用 .bar-fill。 */
+.bar {
+  height: 12rpx;
+  margin: var(--sp-2) 0;
+  border-radius: 999rpx;
+  background-color: var(--c-bg-sunken);
+  overflow: hidden;
+}
+
+.bar-in,
+.bar-fill {
+  height: 100%;
+  border-radius: 999rpx;
+  background-color: var(--c-primary);
+  transition: width 240ms ease;
+}
+
+/* 指标网格：一排放 N 个居中小块（结果页、我的页共用） */
+.grid {
+  display: flex;
+  margin: var(--sp-4) 0 var(--sp-2);
+}
+
+.grid-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.grid-v {
+  font-size: var(--fs-lg);
+  font-weight: 500;
+  color: var(--c-text);
+}
+
+/* 按钮（去掉微信默认样式，统一用变量） */
+.btn {
+  border: none;
+  border-radius: var(--r-md);
+  font-size: var(--fs-md);
+  font-weight: 500;
+  line-height: 2.6;
+  padding: 0 var(--sp-4);
+  background-color: var(--c-bg-sunken);
+  color: var(--c-text);
+}
+
+.btn::after {
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--c-primary);
+  color: #ffffff;
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--c-text-2);
+  border: 1rpx solid var(--c-border-strong);
+}
+
+.btn[disabled],
+.btn-disabled {
+  opacity: 0.4;
+}
+
+/* 安全区 */
+.safe-bottom {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 代码块：等宽字体 + 保留缩进 */
+.code-wrap {
+  background-color: var(--c-bg-code);
+  border-radius: var(--r-md);
+  padding: var(--sp-3);
+  overflow-x: auto;
+}
+
+.code-line {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 24rpx;
+  line-height: 1.65;
+  color: var(--c-code-text);
+  white-space: pre;
+}
+
+/* 药丸标签 */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  height: 40rpx;
+  padding: 0 var(--sp-2);
+  border-radius: 999rpx;
+  font-size: var(--fs-xs);
+  background-color: var(--c-bg-sunken);
+  color: var(--c-text-2);
+}
+
+.pill-primary {
+  background-color: var(--c-primary-weak);
+  color: var(--c-primary);
+}
+
+.pill-success {
+  background-color: var(--c-success-weak);
+  color: var(--c-success);
+}
+
+.pill-danger {
+  background-color: var(--c-danger-weak);
+  color: var(--c-danger);
+}
+
+/* 反馈动效：只服务操作反馈，不做装饰 */
+@keyframes pop {
+  0% {
+    transform: scale(0.88);
+  }
+  60% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-8rpx);
+  }
+  75% {
+    transform: translateX(8rpx);
+  }
+}
+
+.anim-pop {
+  animation: pop 200ms ease-out;
+}
+
+.anim-shake {
+  animation: shake 150ms ease-in-out;
+}

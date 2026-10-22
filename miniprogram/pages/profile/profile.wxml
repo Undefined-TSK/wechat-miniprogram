@@ -1,0 +1,100 @@
+<!--
+  我的
+
+  分三段（信息密度递减）：
+    1. 总览卡：经验 / 通关 / 星级 / 错题 —— 一眼看完成绩
+    2. 分科进度：哪些科目能玩、玩到哪了
+    3. 设置：主题、清空进度、以及「还没做的功能」的诚实说明
+
+  ⚠️ 「待开放」区块不是凑数——它明确告诉用户「登录/同步/付费这些将来会有」，
+     避免用户以为产品就这么点东西。这比空着强，也比假装已经有更诚实。
+-->
+<view class="root {{theme}}">
+  <view class="page-pad">
+
+    <!-- ── 总览 ── -->
+    <view class="card hero">
+      <text class="t-sub">我的成绩单</text>
+      <view class="hero-xp">
+        <text class="hero-xp-num">{{totalXp}}</text>
+        <text class="hero-xp-label">总经验</text>
+      </view>
+
+      <view class="grid">
+        <view class="grid-item">
+          <text class="grid-v">{{clearedLevels}}/{{totalLevels}}</text>
+          <text class="t-hint">已通关</text>
+        </view>
+        <view class="grid-item">
+          <text class="grid-v">{{totalStars}}/{{maxStars}}</text>
+          <text class="t-hint">总星级</text>
+        </view>
+        <view class="grid-item">
+          <text class="grid-v">{{wrongCount}}</text>
+          <text class="t-hint">待攻克错题</text>
+        </view>
+        <view class="grid-item">
+          <text class="grid-v">{{playTimeText}}</text>
+          <text class="t-hint">累计用时</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- ── 错题本入口 ── -->
+    <view class="card entry-card" bindtap="onOpenWrongBook">
+      <view class="entry-left">
+        <text class="entry-title">错题本</text>
+        <text class="t-hint">{{wrongCount > 0 ? wrongCount + ' 道待攻克' : '暂无错题'}}</text>
+      </view>
+      <text class="entry-arrow">›</text>
+    </view>
+
+    <!-- ── 分科进度 ── -->
+    <view class="card">
+      <text class="t-sub">分科进度</text>
+      <view class="subj-list">
+        <view wx:for="{{subjectStats}}" wx:key="id" class="subj-row">
+          <view class="subj-top">
+            <text class="subj-name {{item.ready ? '' : 'is-dim'}}">{{item.name}}</text>
+            <text class="t-hint">{{item.clearedText}}</text>
+          </view>
+          <view wx:if="{{item.ready}}" class="bar">
+            <view class="bar-fill" style="width: {{item.percent}}%"></view>
+          </view>
+          <view wx:if="{{item.ready}}" class="subj-meta">
+            <text class="t-hint">{{item.starText}}</text>
+            <text class="t-hint">{{item.xp}} 经验</text>
+          </view>
+          <text wx:else class="t-hint">题库补充中，敬请期待</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- ── 设置 ── -->
+    <view class="card">
+      <text class="t-sub">设置</text>
+
+      <view class="set-row" bindtap="onToggleTheme">
+        <text class="set-name">深色模式</text>
+        <text class="set-value">{{isDark ? '已开启' : '已关闭'}}</text>
+      </view>
+
+      <view class="set-row" bindtap="onResetProgress">
+        <text class="set-name set-danger">重置全部进度</text>
+        <text class="entry-arrow">›</text>
+      </view>
+    </view>
+
+    <!-- ── 待开放（诚实说明，不假装已有） ── -->
+    <view class="card dim-card">
+      <text class="t-sub">还在路上</text>
+      <view class="todo-row"><text class="todo-dot">·</text><text class="t-hint">账号登录与多设备同步</text></view>
+      <view class="todo-row"><text class="todo-dot">·</text><text class="t-hint">排行榜与好友 PK</text></view>
+      <view class="todo-row"><text class="todo-dot">·</text><text class="t-hint">编程题在线评测</text></view>
+      <view class="todo-row"><text class="todo-dot">·</text><text class="t-hint">AI 智能出题与错题讲解</text></view>
+      <text class="t-hint dim-note">当前版本进度保存在本机，换手机会丢失。</text>
+    </view>
+
+    <button class="btn btn-ghost act-btn" bindtap="onBack">返回关卡地图</button>
+  </view>
+</view>

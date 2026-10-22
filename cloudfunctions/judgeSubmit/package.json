@@ -1,0 +1,11 @@
+{
+  "name": "judge-submit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "XX闯关 · 判题中转云函数（注入内部 token 与 HMAC 签名，前端不持密钥）",
+  "main": "index.js",
+  "engines": {
+    "node": ">=16"
+  },
+  "dependencies": {}
+}

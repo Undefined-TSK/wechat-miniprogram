@@ -1,0 +1,22 @@
+<view class="term">
+  <view class="term-bar">
+    <text class="term-dot"></text>
+    <text class="term-dot"></text>
+    <text class="term-dot"></text>
+    <text class="term-title">运行结果</text>
+  </view>
+  <textarea
+    class="term-input"
+    value="{{value}}"
+    disabled="{{locked}}"
+    placeholder="{{placeholder}}"
+    placeholder-class="term-ph"
+    maxlength="-1"
+    auto-height="{{true}}"
+    bindinput="onInput"
+  />
+</view>
+
+<view class="term-hint">
+  <text class="t-hint">行尾空格与末尾空行会自动忽略；行首空格和大小写会影响判分。</text>
+</view>

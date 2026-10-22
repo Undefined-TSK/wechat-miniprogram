@@ -1,0 +1,81 @@
+.opts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.opt {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: 104rpx;
+  padding: var(--sp-3);
+  border-radius: var(--r-lg);
+  background-color: var(--c-bg-card);
+  border: 2rpx solid var(--c-border);
+}
+
+.opt.is-selected {
+  border-color: var(--c-primary);
+  background-color: var(--c-primary-weak);
+}
+
+.opt.is-right {
+  border-color: var(--c-success);
+  background-color: var(--c-success-weak);
+}
+
+.opt.is-wrong {
+  border-color: var(--c-danger);
+  background-color: var(--c-danger-weak);
+}
+
+.opt-box {
+  flex: none;
+  width: 44rpx;
+  height: 44rpx;
+  line-height: 44rpx;
+  text-align: center;
+  border-radius: var(--r-sm);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: transparent;
+  border: 2rpx solid var(--c-border-strong);
+  background-color: transparent;
+}
+
+.is-selected .opt-box {
+  color: #ffffff;
+  background-color: var(--c-primary);
+  border-color: var(--c-primary);
+}
+
+.is-right .opt-box {
+  color: #ffffff;
+  background-color: var(--c-success);
+  border-color: var(--c-success);
+}
+
+.is-wrong .opt-box {
+  color: #ffffff;
+  background-color: var(--c-danger);
+  border-color: var(--c-danger);
+}
+
+.opt-key {
+  flex: none;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--c-text-2);
+}
+
+.opt-text {
+  flex: 1;
+  font-size: var(--fs-md);
+  line-height: 1.6;
+  color: var(--c-text);
+}
+
+.multi-hint {
+  margin-top: var(--sp-2);
+}

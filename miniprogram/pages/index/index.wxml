@@ -1,0 +1,119 @@
+<!--
+  章节地图页
+
+  布局意图（多邻国式）：
+    1. 顶部一张「概览卡」——章节名 + 完成度进度条 + 经验。一屏之内说清「我在哪、走了多远」
+    2. 中间是关卡路径——纵向排列，每关一个节点，左侧是序号圆点，右侧是卡片
+    3. 已通关是实心圆点 + 星级；未解锁是虚线圆点 + 灰卡；「推荐下一关」高亮描边
+    4. 底部两个入口：错题本 / 我的
+
+  数据纪律：所有派生逻辑（星级数组、解锁态、按钮文案）在 .ts 里算好，
+  wxml 只做最朴素的取值，避免在模板里做判断（难测且易错）。
+-->
+<view class="root {{theme}}">
+
+  <!-- ── 顶部概览 ── -->
+  <view class="hero">
+    <view class="hero-top">
+      <view class="hero-main">
+        <text class="hero-title">{{subjectName}}</text>
+        <text class="hero-sub">{{chapterName}}</text>
+      </view>
+      <view class="hero-xp">
+        <text class="hero-xp-num">{{totalXp}}</text>
+        <text class="hero-xp-label">经验</text>
+      </view>
+    </view>
+
+    <text wx:if="{{chapterDesc}}" class="hero-kps">{{chapterDesc}}</text>
+
+    <view class="bar-wrap">
+      <view class="bar">
+        <view class="bar-fill" style="width: {{progressPercent}}%"></view>
+      </view>
+      <view class="bar-meta">
+        <text class="t-hint">{{clearedText}}</text>
+        <text class="t-hint">{{starText}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ── 科目切换（当前只有 C 语言，保留入口以便扩科） ── -->
+  <scroll-view class="subject-bar" scroll-x enable-flex>
+    <view
+      wx:for="{{subjects}}"
+      wx:key="id"
+      class="subject-chip {{activeSubject === item.id ? 'is-active' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="onTapSubject"
+    >{{item.name}}</view>
+  </scroll-view>
+
+  <!-- ── 关卡路径 ── -->
+  <view class="path">
+    <view
+      wx:for="{{levelCards}}"
+      wx:key="id"
+      class="node {{item.unlocked ? '' : 'is-locked'}} {{item.isNext ? 'is-next' : ''}}"
+    >
+      <!-- 左侧：序号 + 连接线 -->
+      <view class="node-rail">
+        <view class="node-dot {{item.cleared ? 'is-done' : ''}} {{item.unlocked ? '' : 'is-locked'}}">
+          <text wx:if="{{item.cleared}}" class="node-dot-check">✓</text>
+          <text wx:else class="node-dot-num">{{item.index}}</text>
+        </view>
+        <view class="node-line"></view>
+      </view>
+
+      <!-- 右侧：关卡卡 -->
+      <view
+        class="node-card"
+        data-id="{{item.id}}"
+        data-unlocked="{{item.unlocked}}"
+        bindtap="onTapLevel"
+      >
+        <view class="node-card-top">
+          <text class="node-name">{{item.name}}</text>
+          <text class="pill {{item.modeCls}}">{{item.modeLabel}}</text>
+        </view>
+
+        <view class="node-meta">
+          <text class="t-hint">{{item.questionCount}} 题</text>
+          <text wx:if="{{item.bestScoreText}}" class="t-hint">·</text>
+          <text wx:if="{{item.bestScoreText}}" class="t-hint">{{item.bestScoreText}}</text>
+        </view>
+
+        <!-- 星级 / 锁 / 推荐 -->
+        <view class="node-foot">
+          <view wx:if="{{item.unlocked}}" class="stars">
+            <text
+              wx:for="{{item.starList}}"
+              wx:for-item="on"
+              wx:key="index"
+              class="star {{on ? 'is-on' : ''}}"
+            >★</text>
+          </view>
+          <text wx:if="{{item.isNext}}" class="next-tag">从这里继续</text>
+          <text wx:if="{{!item.unlocked}}" class="lock-hint">{{item.lockedHint}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{!hasLevels}}" class="empty">
+      <text class="t-sub">本章节还没有关卡</text>
+      <text class="t-hint">题库正在补充中</text>
+    </view>
+  </view>
+
+  <!-- ── 底部入口 ── -->
+  <view class="entries">
+    <view class="entry" bindtap="onTapWrongBook">
+      <text class="entry-icon">✕</text>
+      <text class="entry-name">错题本</text>
+    </view>
+    <view class="entry" bindtap="onTapProfile">
+      <text class="entry-icon">◎</text>
+      <text class="entry-name">我的</text>
+    </view>
+  </view>
+</view>

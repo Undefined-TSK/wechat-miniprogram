@@ -1,0 +1,24 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/level/level",
+    "pages/wrong/wrong",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "@navBg",
+    "navigationBarTextStyle": "@navTxt",
+    "navigationBarTitleText": "XX闯关",
+    "backgroundColor": "@bg",
+    "backgroundTextStyle": "@bgTxt",
+    "enablePullDownRefresh": false
+  },
+  "darkmode": true,
+  "themeLocation": "theme.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "usingComponents": true,
+  "sitemapLocation": "sitemap.json",
+  "subpackages": [],
+  "preloadRule": {}
+}

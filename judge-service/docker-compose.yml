@@ -1,0 +1,97 @@
+# 判题服务本地开发编排
+#
+# 说明：这份 compose 是**本地/内测用**的。生产部署要点见 README.md，
+#      核心差异是：生产环境判题节点必须放进独立安全组，
+#      只接受来自业务层的鉴权调用（12 项加固第 12 条）。
+
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7.2-alpine
+    # 只用 expose（= compose 内部 DNS 可达），**不用 ports**。
+    # ports 会发布到宿主网卡，而 docker 的端口发布默认绕过 ufw/iptables 规则，
+    # 等于把限流计数暴露出去——攻击者清了计数就等于没有限流。
+    expose:
+      - "6379"
+    networks:
+      - judge-internal
+    command: ["redis-server", "--save", "", "--appendonly", "no", "--maxmemory", "128mb", "--maxmemory-policy", "allkeys-lru"]
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    security_opt:
+      - no-new-privileges
+    cap_drop:
+      - ALL
+
+  judge-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      # 只绑定回环地址：判题服务对外只应通过业务层网关访问
+      - "127.0.0.1:8600:8600"
+    environment:
+      NODE_ENV: development
+      JUDGE_WORKSPACE_ROOT: /var/lib/judge/workspace
+      # 生产用镜像内那个（/etc/judge/seccomp-judge.json，由 Dockerfile COPY 进去）。
+      # 开发时为了方便改 profile 立刻生效，这里指到只读挂载点 —— 见下方 volumes。
+      JUDGE_SECCOMP_PROFILE: /etc/judge/seccomp-judge.json
+      JUDGE_REDIS_URL: redis://redis:6379/0
+      JUDGE_PER_MINUTE: "30"
+      JUDGE_PER_DAY: "300"
+      # 请求体上限。必须 ≥ 单文件代码上限（64KB）+ JSON 包装开销，留足余量
+      JUDGE_MAX_BODY_BYTES: "524288"
+      # 并发判题数。开发机设小一点，避免一次压测把整台机器打满
+      JUDGE_MAX_CONCURRENT: "2"
+      JUDGE_REQUEST_TIMEOUT_MS: "60000"
+      # 判题节点鉴权：生产必须换成密钥管理服务下发的值，不要写死在文件里
+      JUDGE_INTERNAL_TOKEN: ${JUDGE_INTERNAL_TOKEN:?必须通过环境变量注入}
+    volumes:
+      # ⚠️ 生产不要直接挂 docker.sock。正确做法见 README「部署拓扑」。
+      # 本地开发为省事直挂，仅限本机使用。
+      - /var/run/docker.sock:/var/run/docker.sock
+      - judge-workspace:/var/lib/judge/workspace
+      # 开发便利：把宿主 etc/ 覆盖到 /etc/judge（与 Dockerfile 的 COPY 目标**同一路径**）。
+      # 改 profile 后重启服务即生效，不用重建镜像。
+      # ⚠️ 早期这里挂的是 /etc-readonly，与 policy.ts 期待的路径不一致 —— 已修正。
+      - ./etc:/etc/judge:ro
+    depends_on:
+      - redis
+    networks:
+      - judge-internal
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    security_opt:
+      - no-new-privileges
+    cap_drop:
+      - ALL
+    # 控制面自身也要限资源，否则一个死循环就能拖垮整台机器
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 1g
+    # 探针：liveness 与 readiness 分开。
+    # liveness 只看进程活着（依赖挂了不该重启进程）；
+    # readiness 在饱和时才失败（让负载均衡把流量给别的实例）。
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:'+(process.env.JUDGE_PORT||8600)+'/healthz',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  judge-workspace:
+    driver: local
+
+networks:
+  judge-internal:
+    driver: bridge
+    # 内部网络：容器间可通，但不出网（沙箱自己还会再加 --network none）
+    internal: false

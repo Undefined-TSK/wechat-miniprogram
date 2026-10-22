@@ -1,0 +1,60 @@
+{
+  "description": "XX闯关 · 项目配置文件",
+  "miniprogramRoot": "miniprogram/",
+  "packOptions": {
+    "ignore": [
+      { "type": "folder", "value": "tests" },
+      { "type": "folder", "value": "docs" },
+      { "type": "file", "value": "tsconfig.json" }
+    ]
+  },
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "coverView": true,
+    "nodeModules": false,
+    "autoAudits": false,
+    "showShadowRootInWxmlPanel": true,
+    "scopeDataCheck": false,
+    "checkInvalidKey": true,
+    "checkSiteMap": true,
+    "uploadWithSourceMap": true,
+    "compileHotReLoad": true,
+    "useIsolateContext": true,
+    "userConfirmedBundleSwitch": false,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "useCompilerPlugins": ["typescript"],
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
+  },
+  "compileType": "miniprogram",
+  "libVersion": "3.5.0",
+  "appid": "touristappid",
+  "projectname": "xx-chuangguan",
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "练习关（本地判分）",
+          "pathName": "pages/level/level",
+          "query": "levelId=c_ch01_lv01",
+          "scene": null
+        },
+        {
+          "name": "Boss 关（服务端判分）",
+          "pathName": "pages/level/level",
+          "query": "levelId=c_ch01_boss",
+          "scene": null
+        }
+      ]
+    }
+  }
+}

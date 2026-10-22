@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "question-view": "/components/question/index"
+  },
+  "navigationBarTitleText": "闯关中"
+}

@@ -1,0 +1,99 @@
+<!--
+  引擎容器模板
+  说明：小程序不支持动态组件标签（没有 <component :is>），所以用 wx:if 链分发。
+  - 未命中的分支不会渲染，不会产生额外开销
+  - 单个渲染器超过 300KB 时，改为在 app.json 中声明 async 组件并配合
+    componentPlaceholder 走分包异步化，本文件结构不用变
+-->
+<view class="q">
+  <view class="q-head">
+    <text class="pill pill-primary">{{typeLabel}}</text>
+    <text class="pill">{{difficultyLabel}}</text>
+  </view>
+
+  <view class="q-stem">
+    <text wx:for="{{stemLines}}" wx:key="index" class="q-stem-line">{{item}}</text>
+  </view>
+
+  <view wx:if="{{codeLines.length}}" class="code-wrap q-code">
+    <text wx:for="{{codeLines}}" wx:key="index" class="code-line">{{item}}</text>
+  </view>
+
+  <view class="q-body">
+    <single-choice
+      wx:if="{{renderer === 'single-choice'}}"
+      options="{{question.payload.options}}"
+      value="{{answerValue}}"
+      reveal="{{feedback.reveal}}"
+      locked="{{locked}}"
+      bind:change="onChange"
+    />
+    <multi-choice
+      wx:elif="{{renderer === 'multi-choice'}}"
+      options="{{question.payload.options}}"
+      value="{{answerValue}}"
+      reveal="{{feedback.reveal}}"
+      locked="{{locked}}"
+      bind:change="onChange"
+    />
+    <fill-blank
+      wx:elif="{{renderer === 'fill-blank'}}"
+      blanks="{{question.payload.blanks}}"
+      placeholder="{{question.payload.placeholder}}"
+      value="{{answerValue}}"
+      locked="{{locked}}"
+      bind:change="onChange"
+    />
+    <program-output
+      wx:elif="{{renderer === 'program-output'}}"
+      placeholder="{{question.payload.placeholder}}"
+      value="{{answerValue}}"
+      locked="{{locked}}"
+      bind:change="onChange"
+    />
+    <code-editor
+      wx:elif="{{renderer === 'code-editor'}}"
+      template="{{question.payload.template}}"
+      language="{{question.payload.language}}"
+      placeholder="{{question.payload.placeholder}}"
+      value="{{answerValue}}"
+      locked="{{locked}}"
+      bind:change="onChange"
+    />
+    <view wx:else class="q-unknown">未注册的题型渲染器：{{renderer}}</view>
+  </view>
+
+  <view
+    wx:if="{{feedback}}"
+    class="q-feedback {{feedback.correct ? 'is-ok' : (feedback.partial ? 'is-partial' : 'is-bad')}}"
+  >
+    <view class="q-feedback-head">
+      <text class="q-feedback-mark">{{feedback.correct ? '✓' : (feedback.partial ? '!' : '✗')}}</text>
+      <text class="q-feedback-title">{{feedback.correct ? '回答正确' : (feedback.partial ? '部分正确' : '回答错误')}}</text>
+      <text wx:if="{{feedback.partial}}" class="q-feedback-score">得分 {{partialPercent}}%</text>
+    </view>
+
+    <text class="q-feedback-detail">{{feedback.detail}}</text>
+
+    <view wx:if="{{expectedLines.length}}" class="q-reveal">
+      <text class="t-hint">期望输出</text>
+      <view class="code-wrap q-reveal-code">
+        <text wx:for="{{expectedLines}}" wx:key="index" class="code-line">{{item}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{analysisLines.length}}" class="q-analysis">
+      <text class="q-analysis-title">解析{{analysisAigc ? '（AI 生成）' : ''}}</text>
+      <text wx:for="{{analysisLines}}" wx:key="index" class="q-analysis-line">{{item}}</text>
+    </view>
+
+    <text wx:if="{{feedback.layer === 'remote'}}" class="q-remote-note">
+      本题走服务端判分，前端不下发判分依据。
+    </text>
+  </view>
+
+  <view class="q-actions">
+    <button wx:if="{{!locked}}" class="btn btn-primary {{canSubmit ? '' : 'btn-disabled'}}" bindtap="onSubmit">提交</button>
+    <button wx:else class="btn btn-primary" bindtap="onNext">{{isLast ? '查看结算' : '下一题'}}</button>
+  </view>
+</view>

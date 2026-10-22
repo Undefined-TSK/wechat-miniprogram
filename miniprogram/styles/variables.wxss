@@ -1,0 +1,123 @@
+/* ==========================================================================
+   主题变量（唯一颜色来源，任何页面不得写死色值）
+   机制：
+     1. `page` 上是浅色默认值
+     2. `@media (prefers-color-scheme: dark)` 覆盖 page → 跟随系统
+     3. `.theme-dark` / `.theme-light` 加在页面根 view 上 → 手动切换（类选择器
+        优先级高于 page 元素选择器，因此能覆盖系统偏好）
+   ========================================================================== */
+
+page,
+.theme-light {
+  /* 背景 */
+  --c-bg: #f7f8fa;
+  --c-bg-card: #ffffff;
+  --c-bg-sunken: #eef0f4;
+  --c-bg-code: #f2f3f5;
+
+  /* 文字 */
+  --c-text: #1f2329;
+  --c-text-2: #646a73;
+  --c-text-3: #8f959e;
+  --c-text-inverse: #ffffff;
+
+  /* 描边 */
+  --c-border: rgba(31, 35, 41, 0.08);
+  --c-border-strong: rgba(31, 35, 41, 0.16);
+
+  /* 主色与状态色 */
+  --c-primary: #3d7eff;
+  --c-primary-weak: rgba(61, 126, 255, 0.1);
+  --c-success: #22c55e;
+  --c-success-weak: rgba(34, 197, 94, 0.12);
+  --c-danger: #ef4444;
+  --c-danger-weak: rgba(239, 68, 68, 0.12);
+  --c-streak: #f97316;
+  --c-star: #ffb020;
+  --c-star-empty: #d8dce3;
+
+  /* 代码 */
+  --c-code-text: #1f2329;
+  --c-code-keyword: #c4194b;
+  --c-code-gutter: #eaecf0;
+
+  /* 尺寸 */
+  --r-sm: 12rpx;
+  --r-md: 20rpx;
+  --r-lg: 24rpx;
+  --r-xl: 40rpx;
+
+  --sp-1: 8rpx;
+  --sp-2: 16rpx;
+  --sp-3: 24rpx;
+  --sp-4: 32rpx;
+  --sp-5: 48rpx;
+  --sp-6: 64rpx;
+
+  --fs-xs: 22rpx;
+  --fs-sm: 26rpx;
+  --fs-md: 30rpx;
+  --fs-lg: 34rpx;
+  --fs-xl: 44rpx;
+  --fs-2xl: 56rpx;
+
+  --page-pad: 32rpx;
+}
+
+/* 跟随系统深色 */
+@media (prefers-color-scheme: dark) {
+  page {
+    --c-bg: #121212;
+    --c-bg-card: #1c1c1e;
+    --c-bg-sunken: #232326;
+    --c-bg-code: #17171a;
+
+    --c-text: #f2f3f5;
+    --c-text-2: #a9aeb8;
+    --c-text-3: #737a85;
+    --c-text-inverse: #121212;
+
+    --c-border: rgba(255, 255, 255, 0.1);
+    --c-border-strong: rgba(255, 255, 255, 0.2);
+
+    --c-primary: #6b9bff;
+    --c-primary-weak: rgba(107, 155, 255, 0.16);
+    --c-success: #4ade80;
+    --c-success-weak: rgba(74, 222, 128, 0.16);
+    --c-danger: #f87171;
+    --c-danger-weak: rgba(248, 113, 113, 0.16);
+    --c-star-empty: #3a3d42;
+
+    --c-code-text: #e5e6eb;
+    --c-code-keyword: #ff7b9c;
+    --c-code-gutter: #101013;
+  }
+}
+
+/* 手动强制深色（覆盖系统偏好） */
+.theme-dark {
+  --c-bg: #121212;
+  --c-bg-card: #1c1c1e;
+  --c-bg-sunken: #232326;
+  --c-bg-code: #17171a;
+
+  --c-text: #f2f3f5;
+  --c-text-2: #a9aeb8;
+  --c-text-3: #737a85;
+  --c-text-inverse: #121212;
+
+  --c-border: rgba(255, 255, 255, 0.1);
+  --c-border-strong: rgba(255, 255, 255, 0.2);
+
+  --c-primary: #6b9bff;
+  --c-primary-weak: rgba(107, 155, 255, 0.16);
+  --c-success: #4ade80;
+  --c-success-weak: rgba(74, 222, 128, 0.16);
+  --c-danger: #f87171;
+  --c-danger-weak: rgba(248, 113, 113, 0.16);
+  --c-star-empty: #3a3d42;
+
+  --c-code-text: #e5e6eb;
+  --c-code-keyword: #ff7b9c;
+  --c-code-gutter: #101013;
+}

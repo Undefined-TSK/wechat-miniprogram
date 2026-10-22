@@ -1,0 +1,17 @@
+<view class="opts">
+  <view
+    wx:for="{{items}}"
+    wx:key="key"
+    class="opt {{item.cls}}"
+    data-key="{{item.key}}"
+    bindtap="onTap"
+  >
+    <text class="opt-box">{{item.mark || (item.cls === 'is-selected' ? '✓' : '')}}</text>
+    <text class="opt-key">{{item.key}}</text>
+    <text class="opt-text">{{item.text}}</text>
+  </view>
+</view>
+
+<view class="multi-hint">
+  <text class="t-hint">多选题 · 可多选（已选 {{pickedCount}} 项）</text>
+</view>

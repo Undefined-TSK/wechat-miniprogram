@@ -1,0 +1,108 @@
+.ce {
+  border: 1rpx solid var(--c-border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--c-bg-code);
+}
+
+.ce.is-locked {
+  opacity: 0.72;
+}
+
+.ce-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14rpx var(--sp-3);
+  background: var(--c-bg-sunken);
+  border-bottom: 1rpx solid var(--c-border);
+}
+
+.ce-lang {
+  font-size: var(--fs-xs);
+  letter-spacing: 1rpx;
+  text-transform: uppercase;
+  color: var(--c-text-2);
+}
+
+.ce-meta {
+  font-size: var(--fs-xs);
+  color: var(--c-text-3);
+}
+
+.ce-reset {
+  font-size: var(--fs-sm);
+  color: var(--c-primary);
+  padding: 4rpx 12rpx;
+}
+
+.ce-body {
+  display: flex;
+  align-items: flex-start;
+  max-height: 720rpx;
+  overflow: hidden;
+}
+
+/* 行号栏：等宽 + 与输入区共享行高，否则会错位。
+   注意 line-height 必须与 .ce-input 一致（44rpx），这是唯一的对齐依据。 */
+.ce-gutter {
+  flex: 0 0 auto;
+  padding: 24rpx 12rpx 24rpx var(--sp-2);
+  background: var(--c-code-gutter);
+  min-width: 60rpx;
+}
+
+.ce-gutter-line {
+  display: block;
+  font-family: 'SF Mono', Menlo, Consolas, monospace;
+  font-size: var(--fs-sm);
+  line-height: 44rpx;
+  color: var(--c-text-3);
+  text-align: right;
+}
+
+.ce-input {
+  flex: 1 1 auto;
+  padding: 24rpx var(--sp-2);
+  font-family: 'SF Mono', Menlo, Consolas, monospace;
+  font-size: var(--fs-sm);
+  line-height: 44rpx;
+  color: var(--c-code-text);
+  background: transparent;
+  /* 长行必须换行，否则横向溢出无法查看；缩进靠 autoIndent 补 */
+  word-break: break-all;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.ce-placeholder {
+  color: var(--c-text-3);
+}
+
+.ce-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12rpx var(--sp-3);
+  border-top: 1rpx solid var(--c-border);
+  background: var(--c-bg-sunken);
+}
+
+.ce-hint {
+  font-size: var(--fs-xs);
+  color: var(--c-text-3);
+}
+
+.ce-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.ce-btn {
+  font-size: var(--fs-xs);
+  color: var(--c-primary);
+  padding: 6rpx var(--sp-2);
+  border: 1rpx solid var(--c-primary);
+  border-radius: 999rpx;
+}

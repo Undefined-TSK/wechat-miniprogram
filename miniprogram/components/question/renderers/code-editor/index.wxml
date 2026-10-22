@@ -1,0 +1,39 @@
+<!-- 编程题代码编辑器：行号侧栏 + 等宽输入区 + 缩进工具条 -->
+<view class="ce {{locked ? 'is-locked' : ''}}">
+  <view class="ce-head">
+    <text class="ce-lang">{{language}}</text>
+    <text class="ce-meta">第 {{cursorLine}} 行 · 共 {{lineCount}} 行 · {{charCount}} 字</text>
+    <text wx:if="{{!locked && dirty}}" class="ce-reset" bindtap="onReset">重置</text>
+  </view>
+
+  <view class="ce-body">
+    <!-- 行号栏：纯展示，不拦截触摸 -->
+    <view class="ce-gutter">
+      <text wx:for="{{lines}}" wx:key="index" class="ce-gutter-line">{{index + 1}}</text>
+    </view>
+
+    <textarea
+      class="ce-input"
+      value="{{value}}"
+      placeholder="{{placeholder}}"
+      placeholder-class="ce-placeholder"
+      disabled="{{locked}}"
+      maxlength="-1"
+      auto-height
+      show-confirm-bar="{{false}}"
+      adjust-position="{{true}}"
+      cursor-spacing="24"
+      bindinput="onInput"
+      bindfocus="onFocus"
+      bindblur="onBlur"
+    />
+  </view>
+
+  <view wx:if="{{!locked}}" class="ce-foot">
+    <text class="ce-hint">缩进作用于光标所在行</text>
+    <view class="ce-tools">
+      <text class="ce-btn" bindtap="onOutdent">← 减少缩进</text>
+      <text class="ce-btn" bindtap="onIndent">增加缩进 →</text>
+    </view>
+  </view>
+</view>

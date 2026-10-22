@@ -1,0 +1,71 @@
+<!--
+  错题本
+
+  结构：按知识点分组 → 组内是错题卡 → 卡片可展开看题面与解析。
+  行动入口只有一个（重做），但有两个层级：单组重做 / 全部重做。
+  刻意不放「删掉这道题」之类的管理功能——错题本是学习工具，不是收藏夹。
+-->
+<view class="root {{theme}}">
+  <view class="page-pad">
+    <!-- 空状态：不要只说「没有错题」，要告诉用户这意味着什么 -->
+    <view wx:if="{{empty}}" class="empty">
+      <text class="empty-icon">✓</text>
+      <text class="empty-title">错题本是空的</text>
+      <text class="t-hint">答错的题会自动进来。做对两次就自动移出去。</text>
+      <button class="btn btn-primary empty-btn" bindtap="onBack">去闯关</button>
+    </view>
+
+    <block wx:else>
+      <view class="head">
+        <text class="t-sub">{{totalText}}</text>
+        <text class="t-hint">做对 {{masteryStreak}} 次自动移出</text>
+      </view>
+
+      <view wx:for="{{groups}}" wx:for-item="group" wx:for-index="gi" wx:key="kpId" class="group">
+        <view class="group-head">
+          <view class="group-head-left">
+            <text class="group-name">{{group.kpName}}</text>
+            <text class="t-hint">{{group.count}} 道</text>
+          </view>
+          <text class="group-redo" data-g="{{gi}}" bindtap="onRedoGroup">重做本组</text>
+        </view>
+
+        <view class="card-list">
+          <view wx:for="{{group.cards}}" wx:for-item="card" wx:for-index="ci" wx:key="questionId" class="q-card">
+            <view class="q-top" data-g="{{gi}}" data-c="{{ci}}" bindtap="onToggleCard">
+              <text class="q-stem">{{card.stemPreview}}</text>
+            </view>
+
+            <view class="q-meta">
+              <text class="pill">{{card.type}}</text>
+              <text class="t-hint">错过 {{card.wrongCount}} 次</text>
+              <text class="t-hint">·</text>
+              <text class="t-hint">上次 {{card.lastScorePercent}}%</text>
+              <text class="t-hint q-time">{{card.lastWrongText}}</text>
+            </view>
+
+            <!-- 展开区：完整题面 + 解析 + 连对进度 -->
+            <view wx:if="{{card.expanded}}" class="q-expand">
+              <text class="q-full-stem">{{card.stem}}</text>
+
+              <view wx:if="{{card.hasAnalysis}}" class="q-analysis">
+                <text class="q-analysis-label">解析</text>
+                <text class="q-analysis-text">{{card.analysis}}</text>
+              </view>
+              <text wx:else class="t-hint">这道题没有下发解析（防作弊关卡不下发）。</text>
+
+              <view class="q-streak">
+                <text class="t-hint">连续答对进度 {{card.streakText}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="foot">
+        <button class="btn btn-primary act-btn" bindtap="onRedoAll">全部重做（最多 30 道）</button>
+        <button class="btn btn-ghost act-btn" bindtap="onBack">返回</button>
+      </view>
+    </block>
+  </view>
+</view>

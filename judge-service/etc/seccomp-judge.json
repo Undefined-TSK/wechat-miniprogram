@@ -1,0 +1,49 @@
+{
+  "//": "判题沙箱 seccomp 白名单 profile（供 docker --security-opt seccomp= 使用）",
+  "//2": "口径：默认动作 SCMP_ACT_ERRNO，只显式放行编译/运行必需的系统调用。",
+  "//3": "关键：ptrace / socket / mount / unshare / clone(非必要 flag) / reboot 等一律不出现。",
+  "//4": "⚠️ 这是一份起始基线，必须在 Phase 0 的沙箱 POC 里跑一遍 C 与 C++ 的全部编译运行路径，",
+  "//5": "    把实际缺的调用补进来。缺调用会表现为 CE/RE，容易被误判成用户代码错。",
+  "defaultAction": "SCMP_ACT_ERRNO",
+  "archMap": [
+    {
+      "architecture": "SCMP_ARCH_X86_64",
+      "subArchitectures": ["SCMP_ARCH_X86", "SCMP_ARCH_X32"]
+    },
+    {
+      "architecture": "SCMP_ARCH_AARCH64",
+      "subArchitectures": ["SCMP_ARCH_ARM"]
+    }
+  ],
+  "syscalls": [
+    {
+      "names": [
+        "read", "write", "readv", "writev", "pread64", "pwrite64",
+        "open", "openat", "close", "close_range", "lseek", "fstat", "newfstatat", "stat",
+        "lstat", "access", "faccessat", "faccessat2", "getdents64",
+        "mmap", "mprotect", "munmap", "mremap", "brk",
+        "rt_sigaction", "rt_sigprocmask", "rt_sigreturn", "sigaltstack",
+        "exit", "exit_group", "wait4",
+        "clone", "clone3", "execve", "execveat",
+        "getpid", "getppid", "gettid", "getuid", "geteuid", "getgid", "getegid",
+        "getcwd", "chdir", "fchdir", "dup", "dup2", "dup3", "pipe", "pipe2",
+        "fcntl", "ioctl", "flock", "fsync", "fdatasync",
+        "uname", "sysinfo", "getrandom", "clock_gettime", "clock_nanosleep",
+        "nanosleep", "restart_syscall", "sched_yield", "futex", "set_robust_list",
+        "set_tid_address", "prlimit64", "getrlimit", "times", "gettimeofday",
+        "capget", "capset", "prctl", "arch_prctl", "setpgid", "getpgid", "setsid",
+        "kill", "tgkill", "tkill", "epoll_create1", "epoll_ctl", "epoll_wait",
+        "eventfd", "eventfd2", "poll", "ppoll", "select", "pselect6",
+        "mkdir", "mkdirat", "rmdir", "unlink", "unlinkat", "rename", "renameat",
+        "renameat2", "link", "linkat", "symlink", "symlinkat", "readlink",
+        "readlinkat", "truncate", "ftruncate", "chmod", "fchmod", "fchmodat",
+        "chown", "fchown", "fchownat", "utimensat", "fallocate", "statfs", "fstatfs",
+        "statx", "madvise", "mlock", "munlock", "sched_getaffinity", "sched_setaffinity",
+        "getdents", "memfd_create", "copy_file_range", "sendfile", "splice",
+        "getcpu", "rseq", "landlock_create_ruleset", "landlock_add_rule",
+        "landlock_restrict_self"
+      ],
+      "action": "SCMP_ACT_ALLOW"
+    }
+  ]
+}

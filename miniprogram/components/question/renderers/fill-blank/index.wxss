@@ -1,0 +1,39 @@
+.blanks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.blank {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--r-lg);
+  background-color: var(--c-bg-card);
+  border: 2rpx solid var(--c-border);
+}
+
+.blank-label {
+  flex: none;
+  min-width: 44rpx;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--c-text-2);
+}
+
+.blank-input {
+  flex: 1;
+  height: 72rpx;
+  font-size: var(--fs-md);
+  color: var(--c-text);
+}
+
+.blank-ph {
+  color: var(--c-text-3);
+  font-size: var(--fs-sm);
+}
+
+.blank-hint {
+  margin-top: var(--sp-2);
+}
